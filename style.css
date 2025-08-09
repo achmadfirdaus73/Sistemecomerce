@@ -1,0 +1,30 @@
+[v-cloak] { display: none; }
+        .fade-enter-active, .fade-leave-active { transition: opacity 0.2s ease; }
+        .fade-enter-from, .fade-leave-to { opacity: 0; }
+        .v-main { background-color: #f0f2f5; }
+        .thumbnail-gallery { display: flex; gap: 10px; margin-top: 10px; flex-wrap: wrap; }
+        .thumbnail { width: 60px; height: 60px; object-fit: cover; border-radius: 4px; cursor: pointer; border: 2px solid transparent; transition: border-color 0.2s; }
+        .thumbnail:hover { border-color: #ddd; }
+        .active-thumbnail { border-color: #00B5AD; }
+        .v-data-table__wrapper { border-radius: 8px; }
+
+        /* CSS untuk Animasi Stempel */
+        @keyframes stamp {
+            0% { transform: scale(3); opacity: 0; }
+            50% { transform: scale(0.9); opacity: 1; }
+            100% { transform: scale(1); opacity: 1; }
+        }
+        .stamp-animation {
+            animation: stamp 0.5s ease-out;
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            background-color: rgba(255, 255, 255, 0.8);
+            backdrop-filter: blur(2px);
+            z-index: 10;
+        }
