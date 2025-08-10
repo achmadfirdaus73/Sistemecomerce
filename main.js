@@ -28,7 +28,7 @@ import { initializeApp } from "https://www.gstatic.com/firebasejs/9.15.0/firebas
         };
 
         const helpers = { methods: { formatTimestamp(ts) { return ts ? new Date(ts.toDate()).toLocaleString('id-ID', { dateStyle: 'long', timeStyle: 'short' }) : 'Baru saja'; }, statusColor(status) { return ({ 'Proses': 'orange', 'Pengiriman': 'blue', 'Terkirim': 'cyan', 'Lunas': 'green' }[status] || 'grey'); }, parseIndonesianDate(dateString) { if (!dateString) return null; const months = { 'Januari': 0, 'Februari': 1, 'Maret': 2, 'April': 3, 'Mei': 4, 'Juni': 5, 'Juli': 6, 'Agustus': 7, 'September': 8, 'Oktober': 9, 'November': 10, 'Desember': 11 }; const parts = dateString.split(' '); if (parts.length < 3) return null; const day = parseInt(parts[0], 10), month = months[parts[1]], year = parseInt(parts[2], 10); return (!isNaN(day) && month !== undefined && !isNaN(year)) ? new Date(year, month, day) : null; } } };
-        const LoginPage = { props: ['loading', 'errorMessage'], emits: ['login', 'register', 'error'], template: `<div v-if="showSplash" class="d-flex flex-column justify-center align-center" style="height: 100vh; background-color: white;"><v-img src="https://raw.githubusercontent.com/achmadfirdaus73/firdaus/refs/heads/main/DT_G18_E-commerce-Animated-GIF-Icon.gif" alt="Loading..." width="350" height="300" contain></v-img><p class="text-grey mt-4">Loading e-commerce...</p></div><v-container v-else class="fill-height" fluid><v-row align="center" justify="center"><v-col cols="12" sm="8" md="4"><v-card class="elevation-12 pa-2"><v-toolbar color="teal" dark flat><v-toolbar-title class="d-flex align-center"><v-icon class="mr-2">mdi-truck-fast</v-icon>{{ isRegister ? 'Daftar Akun Baru' : 'Selamat Datang!' }}</v-toolbar-title></v-toolbar><v-card-text class="pt-4"><v-form ref="form" @submit.prevent="handleSubmit"><v-text-field v-model="email" label="Alamat E-mail" prepend-inner-icon="mdi-email" type="email" variant="outlined" required :rules="[rules.required, rules.email]"></v-text-field><v-text-field v-model="password" label="Password" prepend-inner-icon="mdi-lock" :type="showPassword ? 'text' : 'password'" :append-inner-icon="showPassword ? 'mdi-eye' : 'mdi-eye-off'" @click:append-inner="showPassword = !showPassword" variant="outlined" required :rules="[rules.required, rules.min6]"></v-text-field><v-text-field v-if="isRegister" v-model="confirmPassword" label="Konfirmasi Password" prepend-inner-icon="mdi-lock-check" type="password" variant="outlined" required :rules="[rules.required, rules.passwordMatch]"></v-text-field><v-alert v-if="errorMessage" type="error" dense class="mb-4" :text="errorMessage"></v-alert></v-form></v-card-text><v-card-actions class="d-flex flex-column px-4 pb-4"><v-btn :loading="loading" color="teal" @click="handleSubmit" block size="large">{{ isRegister ? 'Daftar' : 'Login' }}</v-btn><v-btn variant="plain" class="mt-2" @click="isRegister = !isRegister; $emit('error', '')">{{ isRegister ? 'Sudah punya akun? Login' : 'Belum punya akun? Daftar' }}</v-btn></v-card-actions></v-card></v-col></v-row></v-container>`, data: () => ({ showSplash: true, isRegister: false, email: '', password: '', confirmPassword: '', showPassword: false }), computed: { rules() { return { required: v => !!v || 'Wajib diisi', min6: v => (v && v.length >= 6) || 'Minimal 6 karakter', email: v => /.+@.+\..+/.test(v) || 'E-mail tidak valid', passwordMatch: v => v === this.password || 'Password tidak cocok' } } }, methods: { async handleSubmit() { const { valid } = await this.$refs.form.validate(); if (!valid) return; this.$emit('error', ''); if (this.isRegister) this.$emit('register', { email: this.email, password: this.password }); else this.$emit('login', { email: this.email, password: this.password }); } }, mounted() { setTimeout(() => { this.showSplash = false; }, 2000); } };
+        const LoginPage = { props: ['loading', 'errorMessage'], emits: ['login', 'register', 'error'], template: `<v-sheet class="d-flex align-center justify-center flex-wrap text-center fill-height" style="background: linear-gradient(135deg, #00796B 0%, #004D40 100%);"> <v-row class="fill-height ma-0" align="center" justify="center"> <v-col cols="12" md="6" class="d-none d-md-flex flex-column align-center justify-center"> <v-icon size="128" color="white">mdi-truck-fast-outline</v-icon> <h1 class="text-h2 font-weight-bold mt-4 text-white">Kredit UMKM</h1> <p class="text-h6 mt-2 text-teal-lighten-4">Solusi Cepat Kebutuhan Usaha Anda</p> </v-col> <v-col cols="12" md="6" class="d-flex align-center justify-center"> <v-card class="pa-4" elevation="12" width="100%" max-width="450"> <v-card-title class="text-h5 font-weight-bold text-center">{{ isRegister ? 'Daftar Akun Baru' : 'Selamat Datang!' }}</v-card-title> <v-card-subtitle class="text-center">Silakan masukkan detail akun Anda</v-card-subtitle> <v-card-text class="pt-4"> <v-form ref="form" @submit.prevent="handleSubmit"> <v-text-field v-model="email" label="Alamat E-mail" prepend-inner-icon="mdi-email" type="email" variant="outlined" required :rules="[rules.required, rules.email]"></v-text-field> <v-text-field v-model="password" label="Password" prepend-inner-icon="mdi-lock" :type="showPassword ? 'text' : 'password'" :append-inner-icon="showPassword ? 'mdi-eye' : 'mdi-eye-off'" @click:append-inner="showPassword = !showPassword" variant="outlined" required :rules="[rules.required, rules.min6]"></v-text-field> <v-text-field v-if="isRegister" v-model="confirmPassword" label="Konfirmasi Password" prepend-inner-icon="mdi-lock-check" type="password" variant="outlined" required :rules="[rules.required, rules.passwordMatch]"></v-text-field> <v-alert v-if="errorMessage" type="error" dense class="mb-4" :text="errorMessage"></v-alert> </v-form> </v-card-text> <v-card-actions class="d-flex flex-column px-4 pb-4"> <v-btn :loading="loading" color="teal" @click="handleSubmit" block size="large">{{ isRegister ? 'Daftar' : 'Login' }}</v-btn> <v-btn variant="plain" class="mt-2" @click="isRegister = !isRegister; $emit('error', '')">{{ isRegister ? 'Sudah punya akun? Login' : 'Belum punya akun? Daftar' }}</v-btn> </v-card-actions> </v-card> </v-col> </v-row> </v-sheet>`, data: () => ({ isRegister: false, email: '', password: '', confirmPassword: '', showPassword: false }), computed: { rules() { return { required: v => !!v || 'Wajib diisi', min6: v => (v && v.length >= 6) || 'Minimal 6 karakter', email: v => /.+@.+\..+/.test(v) || 'E-mail tidak valid', passwordMatch: v => v === this.password || 'Password tidak cocok' } } }, methods: { async handleSubmit() { const { valid } = await this.$refs.form.validate(); if (!valid) return; this.$emit('error', ''); if (this.isRegister) this.$emit('register', { email: this.email, password: this.password }); else this.$emit('login', { email: this.email, password: this.password }); } } };
         const ProfileForm = { props: ['user', 'loading'], emits: ['save'], template: `<v-container class="fill-height"><v-row align="center" justify="center"><v-col cols="12" md="8" lg="6"><v-card><v-card-title class="text-h5">Lengkapi Profil Anda</v-card-title><v-card-subtitle>Data ini diperlukan untuk melanjutkan pemesanan.</v-card-subtitle><v-form ref="form" @submit.prevent="submitProfile"><v-card-text><v-row><v-col cols="12" sm="6"><v-text-field v-model="profile.namaLengkap" label="Nama Lengkap" :rules="[rules.required]"></v-text-field></v-col><v-col cols="12" sm="6"><v-text-field v-model="profile.jenisUsaha" label="Jenis Usaha" :rules="[rules.required]"></v-text-field></v-col><v-col cols="12"><v-textarea v-model="profile.alamatRumah" label="Alamat Rumah" rows="2" :rules="[rules.required]"></v-textarea></v-col><v-col cols="12"><v-textarea v-model="profile.alamatUsaha" label="Alamat Usaha" rows="2" :rules="[rules.required]"></v-textarea></v-col><v-col cols="12" sm="6"><v-text-field v-model="profile.noHape" label="No. HP (WhatsApp)" type="tel" :rules="[rules.required]"></v-text-field></v-col><v-col cols="12" sm="6"><v-text-field v-model="profile.nomorKtp" label="No. KTP" type="number" :rules="[rules.required]"></v-text-field></v-col><v-col cols="12"><v-text-field v-model="profile.namaSales" label="Nama Sales (Jika ada)"></v-text-field></v-col></v-row></v-card-text><v-card-actions class="pa-4"><v-spacer></v-spacer><v-btn color="primary" size="large" type="submit" :loading="loading">Simpan Profil</v-btn></v-card-actions></v-form></v-card></v-col></v-row></v-container>`, data() { return { profile: { namaLengkap: this.user.namaLengkap || this.user.email || '', jenisUsaha: this.user.jenisUsaha || '', alamatRumah: this.user.alamatRumah || '', alamatUsaha: this.user.alamatUsaha || '', noHape: this.user.noHape || '', nomorKtp: this.user.nomorKtp || '', namaSales: this.user.namaSales || '' }, rules: { required: v => !!v || 'Wajib diisi' } } }, methods: { async submitProfile() { const { valid } = await this.$refs.form.validate(); if (valid) this.$emit('save', this.profile); } } };
         
         const KonsumenDashboard = {
@@ -44,7 +44,7 @@ import { initializeApp } from "https://www.gstatic.com/firebasejs/9.15.0/firebas
                             <promo-carousel :promos="appData.promos" />
                             <h2 class="text-h5 my-4 d-flex align-center"><v-icon start>mdi-store</v-icon>Etalase Produk</h2>
                             <v-row>
-                                <v-col v-for="product in filteredProducts" :key="product.id" cols="12" sm="6" md="4">
+                                <v-col v-for="product in filteredProducts" :key="product.id" cols="6" sm="6" md="4">
                                     <v-card hover @click="openProductModal(product)">
                                         <v-img :src="product.images[0]" height="200px" cover></v-img>
                                         <v-card-title>{{ product.name }}</v-card-title>
@@ -120,6 +120,7 @@ import { initializeApp } from "https://www.gstatic.com/firebasejs/9.15.0/firebas
                                 </v-col>
                                 <v-col cols="12" md="6">
                                     <p class="body-1 mb-4">{{ selectedProduct.description }}</p>
+                                    <v-text-field v-if="selectedProduct.dp > 0" readonly label="Uang Muka (DP)" :model-value="'Rp ' + selectedProduct.dp.toLocaleString('id-ID')" variant="outlined"></v-text-field>
                                     <v-select v-model="selectedTenor" :items="tenorOptions" item-title="text" item-value="days" label="Pilih Tenor"></v-select>
                                     <v-radio-group v-model="paymentFrequency" inline label="Frekuensi Bayar">
                                         <v-radio label="Harian" value="harian"></v-radio>
@@ -199,7 +200,7 @@ import { initializeApp } from "https://www.gstatic.com/firebasejs/9.15.0/firebas
                 const filteredProducts = computed(() => { if (!props.appData.products) return []; return props.appData.products.filter(p => p.name.toLowerCase().includes(searchTerm.value.toLowerCase())); });
                 const userOrders = computed(() => (props.appData.orders || []).filter(o => o.userId === props.user?.uid).sort((a,b) => (b.timestamp?.toDate() || 0) - (a.timestamp?.toDate() || 0)));
                 const activeBills = computed(() => (userOrders.value || []).filter(o => o.status === 'Terkirim' && o.payments.length < o.tenor));
-                const calculatedInstallment = computed(() => { if (!selectedProduct.value) return 0; const option = tenorOptions.find(o => o.days === selectedTenor.value); if (!option) return 0; const rawDailyPrice = (selectedProduct.value.hargaModal * option.multiplier) / option.days; const roundedDailyPrice = customRound(rawDailyPrice); return paymentFrequency.value === 'mingguan' ? roundedDailyPrice * 6 : roundedDailyPrice; });
+                const calculatedInstallment = computed(() => { if (!selectedProduct.value) return 0; const option = tenorOptions.find(o => o.days === selectedTenor.value); if (!option) return 0; const rawDailyPrice = ((selectedProduct.value.hargaModal - (selectedProduct.value.dp || 0)) * option.multiplier) / option.days; const roundedDailyPrice = customRound(rawDailyPrice); return paymentFrequency.value === 'mingguan' ? roundedDailyPrice * 6 : roundedDailyPrice; });
                 const billProgress = computed(() => { if (!selectedBill.value) return 0; const payments = (selectedBill.value.payments || []).length; const tenor = selectedBill.value.tenor; return tenor > 0 ? (payments / tenor) * 100 : 0; });
                 const combinedHistory = computed(() => { if (!selectedBill.value) return []; const payments = (selectedBill.value.payments || []).map(p => ({ ...p, status: 'paid', sortDate: helpers.methods.parseIndonesianDate(p.date) })); const notes = (selectedBill.value.collectionNotes || []).map(n => ({ ...n, status: 'unpaid', sortDate: helpers.methods.parseIndonesianDate(n.date) })); return [...payments, ...notes].sort((a, b) => b.sortDate - a.sortDate); });
                 const lateDaysCount = computed(() => {
@@ -221,7 +222,7 @@ import { initializeApp } from "https://www.gstatic.com/firebasejs/9.15.0/firebas
                 const removeFromCart = (cartId) => { emit('action', { type: 'remove-from-cart', payload: cartId }); };
                 const confirmCheckout = () => { const shippingAddress = selectedAddress.value === 'rumah' ? props.user.alamatRumah : props.user.alamatUsaha; emit('action', { type: 'new-order', payload: { shippingAddress } }); checkoutModal.value = false; localActiveItem.value = 'order'; };
                 const openBillModal = (bill) => { selectedBill.value = bill; billModal.value = true; };
-                const calculateMinInstallment = (product) => { const option = tenorOptions[0]; const rawDailyPrice = (product.hargaModal * option.multiplier) / option.days; return customRound(rawDailyPrice); };
+                const calculateMinInstallment = (product) => { const option = tenorOptions[0]; const rawDailyPrice = ((product.hargaModal - (product.dp || 0)) * option.multiplier) / option.days; return customRound(rawDailyPrice); };
                 return { localActiveItem, searchTerm, productModal, selectedProduct, activeImage, selectedTenor, paymentFrequency, checkoutModal, selectedAddress, billModal, selectedBill, tenorOptions, filteredProducts, userOrders, activeBills, calculatedInstallment, billProgress, combinedHistory, lateDaysCount, openProductModal, addToCart, removeFromCart, confirmCheckout, openBillModal, calculateMinInstallment };
             }
         };
@@ -252,7 +253,7 @@ import { initializeApp } from "https://www.gstatic.com/firebasejs/9.15.0/firebas
                                     <h3 class="text-h6 my-4">Gambar Carousel</h3>
                                     <promo-carousel :promos="appData.promos" />
                                     <v-row>
-                                        <v-col cols="12" md="6"><v-card><v-card-title>Tambah Produk Baru</v-card-title><v-card-text><v-form ref="newProductForm" @submit.prevent="addProduct"><v-text-field v-model="newProduct.name" label="Nama Barang"></v-text-field><v-textarea v-model="newProduct.description" label="Deskripsi" rows="2"></v-textarea><v-text-field v-model.number="newProduct.hargaModal" label="Harga Modal" type="number"></v-text-field><v-textarea v-model="newProduct.images" label="URL Foto (pisahkan dgn koma)" rows="2"></v-textarea><v-btn type="submit" color="primary">Tambah Produk</v-btn></v-form></v-card-text></v-card></v-col>
+                                        <v-col cols="12" md="6"><v-card><v-card-title>Tambah Produk Baru</v-card-title><v-card-text><v-form ref="newProductForm" @submit.prevent="addProduct"><v-text-field v-model="newProduct.name" label="Nama Barang"></v-text-field><v-textarea v-model="newProduct.description" label="Deskripsi" rows="2"></v-textarea><v-text-field v-model.number="newProduct.hargaModal" label="Harga Modal" type="number"></v-text-field><v-text-field v-model.number="newProduct.dp" label="Uang Muka (DP)" type="number"></v-text-field><v-textarea v-model="newProduct.images" label="URL Foto (pisahkan dgn koma)" rows="2"></v-textarea><v-btn type="submit" color="primary">Tambah Produk</v-btn></v-form></v-card-text></v-card></v-col>
                                         <v-col cols="12" md="6"><v-card><v-card-title>Tambah Konten Carousel</v-card-title><v-card-text><v-form ref="newPromoForm" @submit.prevent="addPromo"><v-select v-model="newPromo.type" :items="['image', 'video']" label="Tipe Konten"></v-select><v-text-field v-model="newPromo.url" label="URL Konten"></v-text-field><v-btn type="submit" color="teal">Tambah Konten</v-btn></v-form></v-card-text></v-card></v-col>
                                     </v-row>
                                     <h3 class="text-h6 my-4">Daftar Semua Produk</h3>
@@ -274,7 +275,7 @@ import { initializeApp } from "https://www.gstatic.com/firebasejs/9.15.0/firebas
                                     </v-card>
                                 </v-window-item>
                                 <v-window-item value="broadcast"><v-card max-width="600"><v-card-title>Kirim Pesan Broadcast</v-card-title><v-card-text><v-form @submit.prevent="sendBroadcast"><v-textarea v-model="broadcastMessage" label="Pesan untuk Semua Konsumen" rows="4"></v-textarea><v-btn type="submit" color="primary">Kirim Pesan</v-btn></v-form></v-card-text></v-card></v-window-item>
-                                <v-window-item value="data_konsumen"><v-card><v-card-title>Data Konsumen</v-card-title><v-text-field v-model="consumerSearch" label="Cari Konsumen" prepend-inner-icon="mdi-magnify" class="pa-4"></v-text-field><v-data-table :headers="consumerHeaders" :items="consumersWithBillStatus" :search="consumerSearch" :items-per-page="5"><template v-slot:item.billStatus="{ item }"><v-chip :color="item.billStatus.color" size="small">{{ item.billStatus.text }}</v-chip></template></v-data-table></v-card></v-window-item>
+                                <v-window-item value="data_konsumen"><v-card><v-card-title>Data Konsumen</v-card-title><v-text-field v-model="consumerSearch" label="Cari Konsumen" prepend-inner-icon="mdi-magnify" class="pa-4"></v-text-field><v-data-table :headers="consumerHeaders" :items="consumersWithBillStatus" :search="consumerSearch" :items-per-page="5"><template v-slot:item.billStatus="{ item }"><v-chip :color="item.billStatus.color" size="small">{{ item.billStatus.text }}</v-chip></template><template v-slot:item.totalLateDays="{ item }"><v-chip v-if="item.totalLateDays > 0" color="red" size="small">{{ item.totalLateDays }} hari</v-chip><span v-else>-</span></template></v-data-table></v-card></v-window-item>
                                 <v-window-item value="laporan">
                                     <div v-if="!selectedCollectorForReport">
                                         <h3 class="text-h6 my-4">Laporan Kolektor</h3>
@@ -300,6 +301,10 @@ import { initializeApp } from "https://www.gstatic.com/firebasejs/9.15.0/firebas
                                                     </v-col>
                                                 </v-row>
                                             </v-card-text>
+                                            <v-card-actions>
+                                                <v-spacer></v-spacer>
+                                                <v-btn @click="downloadReport" color="green" prepend-icon="mdi-file-excel">Download Laporan</v-btn>
+                                            </v-card-actions>
                                         </v-card>
                                         <v-card><v-card-title>Detail Penagihan Konsumen</v-card-title>
                                         <v-list><v-list-item v-for="item in collectorDailyReport.billList" :key="item.orderId" :title="item.consumerName" :subtitle="item.productName">
@@ -317,9 +322,9 @@ import { initializeApp } from "https://www.gstatic.com/firebasejs/9.15.0/firebas
                             </v-window>
                         </v-container>
                     </v-main>
-                    <v-dialog v-model="editDialog.show" max-width="600px"><v-card><v-card-title>Edit Produk: {{ editDialog.data.name }}</v-card-title><v-card-text><v-text-field v-model="editDialog.data.name" label="Nama Barang"></v-text-field><v-textarea v-model="editDialog.data.description" label="Deskripsi"></v-textarea><v-text-field v-model.number="editDialog.data.hargaModal" label="Harga Modal" type="number"></v-text-field><v-textarea v-model="editDialog.data.images" label="URL Gambar (pisahkan koma)"></v-textarea></v-card-text><v-card-actions><v-spacer></v-spacer><v-btn @click="editDialog.show = false">Batal</v-btn><v-btn color="primary" @click="saveProductEdit">Simpan</v-btn></v-card-actions></v-card></v-dialog>
+                    <v-dialog v-model="editDialog.show" max-width="600px"><v-card><v-card-title>Edit Produk: {{ editDialog.data.name }}</v-card-title><v-card-text><v-text-field v-model="editDialog.data.name" label="Nama Barang"></v-text-field><v-textarea v-model="editDialog.data.description" label="Deskripsi"></v-textarea><v-text-field v-model.number="editDialog.data.hargaModal" label="Harga Modal" type="number"></v-text-field><v-text-field v-model.number="editDialog.data.dp" label="Uang Muka (DP)" type="number"></v-text-field><v-textarea v-model="editDialog.data.images" label="URL Gambar (pisahkan koma)"></v-textarea></v-card-text><v-card-actions><v-spacer></v-spacer><v-btn @click="editDialog.show = false">Batal</v-btn><v-btn color="primary" @click="saveProductEdit">Simpan</v-btn></v-card-actions></v-card></v-dialog>
                     <v-dialog v-model="orderDetailModal.show" max-width="600px">
-                        <v-card v-if="orderDetailModal.data">
+                        <v-card v-if="orderDetailModal.data" ref="orderDetailCard">
                             <v-card-title>Detail Pesanan {{ orderDetailModal.data.id }}</v-card-title>
                             <v-card-text>
                                 <v-list lines="two">
@@ -338,7 +343,11 @@ import { initializeApp } from "https://www.gstatic.com/firebasejs/9.15.0/firebas
                                     <v-list-item title="Sales" :subtitle="orderDetailModal.data.namaSales || '-'"></v-list-item>
                                 </v-list>
                             </v-card-text>
-                            <v-card-actions><v-spacer></v-spacer><v-btn color="primary" @click="orderDetailModal.show = false">Tutup</v-btn></v-card-actions>
+                            <v-card-actions>
+                                <v-btn @click="downloadOrderDetail" color="blue" prepend-icon="mdi-camera">Download sebagai Gambar</v-btn>
+                                <v-spacer></v-spacer>
+                                <v-btn color="primary" @click="orderDetailModal.show = false">Tutup</v-btn>
+                            </v-card-actions>
                         </v-card>
                     </v-dialog>
                 </v-layout>
@@ -348,7 +357,7 @@ import { initializeApp } from "https://www.gstatic.com/firebasejs/9.15.0/firebas
                 const drawer = ref(!mobile.value);
                 const localActiveItem = computed({ get: () => props.activeItem, set: (value) => emit('update:activeItem', value) });
                 const menuItems = [ { value: 'produk', text: 'Produk & Data', icon: 'mdi-store' }, { value: 'order', text: 'Order', icon: 'mdi-inbox' }, { value: 'broadcast', text: 'Broadcast', icon: 'mdi-bullhorn' }, { value: 'data_konsumen', text: 'Data Konsumen', icon: 'mdi-account-group' }, { value: 'laporan', text: 'Laporan', icon: 'mdi-chart-bar' } ];
-                const newProduct = ref({ name: '', description: '', hargaModal: '', images: '' });
+                const newProduct = ref({ name: '', description: '', hargaModal: '', images: '', dp: 0 });
                 const newPromo = ref({ type: 'image', url: '' });
                 const broadcastMessage = ref('');
                 const editDialog = reactive({ show: false, data: {} });
@@ -357,6 +366,7 @@ import { initializeApp } from "https://www.gstatic.com/firebasejs/9.15.0/firebas
                 const adminReportDate = ref(new Date().toISOString().split('T')[0]);
                 const orderFilterDate = ref(null);
                 const orderDetailModal = reactive({ show: false, data: null });
+                const orderDetailCard = ref(null);
 
                 const stats = computed(() => [ { title: 'Pesanan', value: props.appData.orders.length }, { title: 'Produk', value: props.appData.products.length }, { title: 'Konsumen', value: props.appData.consumers.length }, { title: 'Kolektor', value: props.appData.collectors.length }, ]);
                 const sortedOrders = computed(() => {
@@ -369,8 +379,18 @@ import { initializeApp } from "https://www.gstatic.com/firebasejs/9.15.0/firebas
                 });
                 const collectorOptions = computed(() => props.appData.collectors.map(c => ({ title: c.namaLengkap || c.email, value: c.uid })));
                 const getSalesName = (email) => props.appData.consumers.find(c => c.email === email)?.namaSales || 'N/A';
-                const consumerHeaders = [ { title: 'Nama', key: 'namaLengkap' }, { title: 'Jenis Usaha', key: 'jenisUsaha' }, { title: 'No. HP', key: 'noHape' }, { title: 'Alamat Usaha', key: 'alamatUsaha' }, { title: 'Sales', key: 'namaSales' }, { title: 'Status Tagihan', key: 'billStatus' } ];
-                const consumersWithBillStatus = computed(() => props.appData.consumers.map(c => { const hasAnyOrder = props.appData.orders.some(o => o.consumerEmail === c.email); const hasActiveBill = hasAnyOrder && props.appData.orders.some(o => o.consumerEmail === c.email && o.status !== 'Lunas'); let billStatus = { text: '-', color: 'grey' }; if (hasActiveBill) billStatus = { text: 'Berjalan', color: 'orange' }; else if (hasAnyOrder) billStatus = { text: 'Lunas', color: 'green' }; return { ...c, billStatus }; }));
+                const consumerHeaders = [ { title: 'Nama', key: 'namaLengkap' }, { title: 'Jenis Usaha', key: 'jenisUsaha' }, { title: 'No. HP', key: 'noHape' }, { title: 'Alamat Usaha', key: 'alamatUsaha' }, { title: 'Sales', key: 'namaSales' }, { title: 'Status Tagihan', key: 'billStatus' }, { title: 'Total Telat', key: 'totalLateDays' } ];
+                const consumersWithBillStatus = computed(() => props.appData.consumers.map(c => {
+                    const consumerOrders = props.appData.orders.filter(o => o.consumerEmail === c.email);
+                    const hasActiveBill = consumerOrders.some(o => o.status !== 'Lunas');
+                    let billStatus = { text: '-', color: 'grey' };
+                    if (hasActiveBill) billStatus = { text: 'Berjalan', color: 'orange' };
+                    else if (consumerOrders.length > 0) billStatus = { text: 'Lunas', color: 'green' };
+
+                    const totalLateDays = consumerOrders.reduce((acc, order) => acc + calculateLateDays(order), 0);
+
+                    return { ...c, billStatus, totalLateDays };
+                }));
                 
                 const collectorDailyReport = computed(() => {
                     if (!selectedCollectorForReport.value) return { subtotal: 0, potentialTotal: 0, assignedCount: 0, billList: [], performance: 0, failureRate: 0 };
@@ -421,15 +441,66 @@ import { initializeApp } from "https://www.gstatic.com/firebasejs/9.15.0/firebas
                     const lateDays = expectedPayments - actualPayments;
                     return lateDays > 0 ? lateDays : 0;
                 };
-                const addProduct = () => emit('action', { type: 'add-product', payload: { ...newProduct.value, images: newProduct.value.images.split(',').map(s=>s.trim()) } });
+                const addProduct = () => emit('action', { type: 'add-product', payload: { ...newProduct.value, images: newProduct.value.images.split(',').map(s=>s.trim()), dp: Number(newProduct.value.dp) || 0 } });
                 const addPromo = () => emit('action', { type: 'add-promo', payload: newPromo.value });
                 const sendBroadcast = () => { emit('action', { type: 'add-broadcast', payload: broadcastMessage.value }); broadcastMessage.value = ''; };
                 const updateOrderStatus = (order, status) => emit('action', { type: 'update-order-status', payload: { order, status } });
                 const assignCollector = (order, collectorUid) => { const collector = props.appData.collectors.find(c => c.uid === collectorUid); emit('action', { type: 'assign-collector', payload: { firebaseDocId: order.firebaseDocId, collectorUid, collectorName: collector.namaLengkap || collector.email } }); };
                 const openEditProduct = (product) => { editDialog.data = { ...product, images: Array.isArray(product.images) ? product.images.join(', ') : '' }; editDialog.show = true; };
-                const saveProductEdit = () => { const payload = { ...editDialog.data, images: editDialog.data.images.split(',').map(s => s.trim()) }; emit('action', { type: 'update-product', payload }); editDialog.show = false; };
+                const saveProductEdit = () => { const payload = { ...editDialog.data, images: editDialog.data.images.split(',').map(s => s.trim()), dp: Number(editDialog.data.dp) || 0 }; emit('action', { type: 'update-product', payload }); editDialog.show = false; };
                 const openOrderDetailModal = (order) => { orderDetailModal.data = order; orderDetailModal.show = true; };
-                return { isMobile: mobile, drawer, localActiveItem, menuItems, stats, newProduct, newPromo, broadcastMessage, sortedOrders, collectorOptions, getSalesName, updateOrderStatus, assignCollector, addProduct, addPromo, sendBroadcast, editDialog, openEditProduct, saveProductEdit, consumerHeaders, consumersWithBillStatus, consumerSearch, calculateLateDays, selectedCollectorForReport, adminReportDate, collectorDailyReport, orderFilterDate, orderDetailModal, openOrderDetailModal };
+                
+                const downloadReport = () => {
+                    const report = collectorDailyReport.value;
+                    const collectorName = selectedCollectorForReport.value.namaLengkap || selectedCollectorForReport.value.email;
+                    const date = new Date(adminReportDate.value).toLocaleDateString('id-ID');
+
+                    // Data untuk di-export
+                    const summary = [
+                        ["Laporan Harian Kolektor"],
+                        ["Nama", collectorName],
+                        ["Tanggal", date],
+                        [],
+                        ["Total Tagihan", report.assignedCount],
+                        ["Uang Tertagih", `Rp ${report.subtotal.toLocaleString('id-ID')}`],
+                        ["Seharusnya Tertagih", `Rp ${report.potentialTotal.toLocaleString('id-ID')}`],
+                        ["Performa Berhasil", `${report.performance}%`],
+                        ["Performa Gagal", `${report.failureRate}%`],
+                        []
+                    ];
+
+                    const tableHeader = ["Konsumen", "Produk", "Status", "Waktu", "Alasan"];
+                    const tableData = report.billList.map(item => [
+                        item.consumerName,
+                        item.productName,
+                        item.status.text,
+                        item.status.time || '-',
+                        item.status.reason || '-'
+                    ]);
+
+                    const worksheet = XLSX.utils.aoa_to_sheet(summary);
+                    XLSX.utils.sheet_add_aoa(worksheet, [tableHeader], { origin: "A11" });
+                    XLSX.utils.sheet_add_json(worksheet, tableData, { origin: "A12", skipHeader: true });
+
+                    const workbook = XLSX.utils.book_new();
+                    XLSX.utils.book_append_sheet(workbook, worksheet, "Laporan");
+
+                    XLSX.writeFile(workbook, `Laporan_${collectorName.replace(/ /g,"_")}_${date}.xlsx`);
+                };
+                
+                const downloadOrderDetail = () => {
+                    const cardElement = orderDetailCard.value.$el;
+                    if (cardElement) {
+                        html2canvas(cardElement).then(canvas => {
+                            const link = document.createElement('a');
+                            link.download = `Detail_Pesanan_${orderDetailModal.data.id}.png`;
+                            link.href = canvas.toDataURL();
+                            link.click();
+                        });
+                    }
+                };
+
+                return { isMobile: mobile, drawer, localActiveItem, menuItems, stats, newProduct, newPromo, broadcastMessage, sortedOrders, collectorOptions, getSalesName, updateOrderStatus, assignCollector, addProduct, addPromo, sendBroadcast, editDialog, openEditProduct, saveProductEdit, consumerHeaders, consumersWithBillStatus, consumerSearch, calculateLateDays, selectedCollectorForReport, adminReportDate, collectorDailyReport, orderFilterDate, orderDetailModal, openOrderDetailModal, downloadReport, orderDetailCard, downloadOrderDetail };
             }
         };
 
@@ -469,7 +540,7 @@ import { initializeApp } from "https://www.gstatic.com/firebasejs/9.15.0/firebas
                         </v-window-item>
                         <v-window-item value="profil">
                             <h3 class="text-h6 my-4">Profil & Statistik Harian</h3>
-                            <v-card>
+                            <v-card class="mb-4">
                                 <v-card-text>
                                     <p><strong>Nama:</strong> {{ user.namaLengkap || user.email }}</p>
                                     <v-row class="mt-4 text-center">
@@ -483,18 +554,15 @@ import { initializeApp } from "https://www.gstatic.com/firebasejs/9.15.0/firebas
                                             <div class="text-caption">Gagal Tertagih</div>
                                         </v-col>
                                     </v-row>
+                                    <v-divider class="my-4"></v-divider>
+                                    <v-list-subheader>Rincian Portofolio</v-list-subheader>
+                                    <v-list-item title="Tagihan Harian" :subtitle="portfolioStats.dailyCount + ' Konsumen'"></v-list-item>
+                                    <v-list-item title="Tagihan Mingguan" :subtitle="portfolioStats.weeklyCount + ' Konsumen'"></v-list-item>
+                                    <v-divider></v-divider>
+                                    <v-list-item v-for="item in portfolioStats.multipleBills" :key="item.count" :title="item.count + ' Tagihan'" :subtitle="item.consumers + ' Konsumen'"></v-list-item>
                                     <v-btn color="red" @click="$emit('logout')" class="mt-4">Logout</v-btn>
                                 </v-card-text>
                             </v-card>
-                            <h3 class="text-h6 my-4">Konsumen Belum Ditagih Hari Ini</h3>
-                            <v-list v-if="unpaidTodayList.length > 0">
-                                <v-list-item v-for="item in unpaidTodayList" :key="item.bill.id" @click="openBillModal(item.bill)">
-                                    <v-list-item-title>{{ item.bill.consumerName }}</v-list-item-title>
-                                    <v-list-item-subtitle>{{ item.bill.productName }}</v-list-item-subtitle>
-                                    <template v-slot:append><v-icon>mdi-chevron-right</v-icon></template>
-                                </v-list-item>
-                            </v-list>
-                            <v-alert v-else type="info">Semua konsumen yang aktif telah ditangani hari ini.</v-alert>
                         </v-window-item>
                     </v-window>
                 </v-container>
@@ -580,6 +648,31 @@ import { initializeApp } from "https://www.gstatic.com/firebasejs/9.15.0/firebas
                     return { total, paid: paidCount, unpaid: unpaidCount, performance, failureRate };
                 });
                 
+                const portfolioStats = computed(() => {
+                    const daily = new Set();
+                    const weekly = new Set();
+                    const consumerBillCounts = {};
+
+                    myActiveBills.value.forEach(bill => {
+                        if (bill.paymentFrequency === 'harian') daily.add(bill.consumerEmail);
+                        if (bill.paymentFrequency === 'mingguan') weekly.add(bill.consumerEmail);
+                        consumerBillCounts[bill.consumerEmail] = (consumerBillCounts[bill.consumerEmail] || 0) + 1;
+                    });
+                    
+                    const multipleBills = Object.entries(consumerBillCounts)
+                        .filter(([email, count]) => count > 1)
+                        .reduce((acc, [email, count]) => {
+                            acc[count] = (acc[count] || 0) + 1;
+                            return acc;
+                        }, {});
+
+                    return {
+                        dailyCount: daily.size,
+                        weeklyCount: weekly.size,
+                        multipleBills: Object.entries(multipleBills).map(([count, consumers]) => ({count, consumers}))
+                    };
+                });
+
                 const dailyReport = computed(() => {
                     const selectedDateString = new Date(historyDate.value).toLocaleDateString('id-ID', { day: 'numeric', month: 'long', year: 'numeric' });
                     let subtotal = 0;
@@ -615,7 +708,7 @@ import { initializeApp } from "https://www.gstatic.com/firebasejs/9.15.0/firebas
                     billModal.value = false;
                 };
 
-                return { localActiveItem, searchTerm, billModal, selectedBill, myActiveBills, filteredBills, isActionTakenToday, todayAction, dailyStats, dailyReport, historyDate, unpaidTodayList, consumerInfo, openBillModal, confirmPayment, unpaidReasonModal, unpaidReason, customUnpaidReason, openUnpaidReasonModal, saveUnpaidReason, getConsumerInfo, paymentProcessing };
+                return { localActiveItem, searchTerm, billModal, selectedBill, myActiveBills, filteredBills, isActionTakenToday, todayAction, dailyStats, dailyReport, historyDate, unpaidTodayList, consumerInfo, openBillModal, confirmPayment, unpaidReasonModal, unpaidReason, customUnpaidReason, openUnpaidReasonModal, saveUnpaidReason, getConsumerInfo, paymentProcessing, portfolioStats };
             }
         };
 
