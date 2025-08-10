@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Produk Kredit UMKM - Vue & Vuetify</title>
+
+    <!-- CSS untuk Vuetify & Material Design Icons -->
+    <link href="https://cdn.jsdelivr.net/npm/vuetify@3.x/dist/vuetify.min.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/@mdi/font@latest/css/materialdesignicons.min.css" rel="stylesheet">
+
+    <!-- CSS Kustom -->
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div id="app" v-cloak>
+        <v-app>
+            <!-- Komponen utama yang berisi konten halaman -->
+            <v-main>
+                <v-overlay :model-value="loading" class="align-center justify-center" persistent>
+                    <v-progress-circular indeterminate size="64" color="white"></v-progress-circular>
+                    <div class="text-center mt-4">Memuat Aplikasi...</div>
+                </v-overlay>
+
+                <transition name="fade" mode="out-in">
+                    <!-- Halaman Login -->
+                    <login-page v-if="!user" :loading="authLoading" :error-message="authError" @login="handleLogin" @register="handleRegister" @error="showNotification"></login-page>
+                    
+                    <!-- Konten setelah login -->
+                    <div v-else>
+                        <!-- Form profil jika belum lengkap -->
+                        <profile-form v-if="user.role === 'konsumen' && !isProfileComplete" :user="user" :loading="profileLoading" @save="handleSaveProfile"></profile-form>
+                        
+                        <!-- Dashboard sesuai peran -->
+                        <div v-else>
+                            <component 
+                                :is="currentDashboardComponent"
+                                :user="user"
+                                :app-data="appData"
+                                v-model:active-item="activeItem"
+                                @logout="handleLogout"
+                                @action="handleAction"
+                            ></component>
+                        </div>
+                    </div>
+                </transition>
+            </v-main>
+
+            <!-- Snackbar untuk notifikasi global -->
+            <v-snackbar v-model="snackbar.show" :color="snackbar.color" :timeout="4000" location="top right">
+                {{ snackbar.text }}
+                <template v-slot:actions>
+                    <v-btn icon="mdi-close" variant="text" @click="snackbar.show = false"></v-btn>
+                </template>
+            </v-snackbar>
+            
+            <!-- Navigasi Bawah yang Tetap (Fixed) untuk Mobile -->
+            <v-bottom-navigation v-if="user && isMobile" v-model="activeItem" :color="navColor" grow app>
+                <v-btn v-for="item in currentNavItems" :key="item.value" :value="item.value">
+                    <!-- Badge khusus untuk ikon keranjang -->
+                    <v-badge v-if="item.value === 'keranjang'" :content="appData.cartItems.length" color="red" :model-value="appData.cartItems.length > 0">
+                        <v-icon>{{ item.icon }}</v-icon>
+                    </v-badge>
+                    <v-icon v-else>{{ item.icon }}</v-icon>
+                    <span>{{ item.text }}</span>
+                </v-btn>
+            </v-bottom-navigation>
+        </v-app>
+    </div>
+
+    <!-- Library Pihak Ketiga -->
+    <script src="https://unpkg.com/vue@3/dist/vue.global.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/vuetify@3.x/dist/vuetify.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/xlsx/dist/xlsx.full.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+    
+    <!-- JavaScript Kustom -->
+    <script type="module" src="main.js"></script>
+</body>
+</html>
